@@ -1,38 +1,49 @@
-package com.example.ss4.entity;
+    package com.example.ss4.entity;
 
-import jakarta.persistence.*;
+    import jakarta.persistence.*;
 
-@Entity
-@Table(name = "courses")
-public class Course {
+    import java.util.List;
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    @Entity
+    @Table(name = "courses")
+    public class Course {
 
-    @Column(nullable = false) // Không được để trống
-    private String title;
+        @Id
+        @GeneratedValue(strategy = GenerationType.IDENTITY)
+        private Long id;
 
-    @Enumerated(EnumType.STRING) // Lưu giá trị Enum dưới dạng Chuỗi (String) thay vì số (Ordinal)
-    @Column(nullable = false)
-    private CourseStatus status;
+        @Column(nullable = false)
+        private String title;
 
-    @Column(name = "instructor_id") // Tuân thủ naming convention của DB
-    private Long instructorId;
+        @Enumerated(EnumType.STRING)
+        @Column(nullable = false)
+        private CourseStatus status;
 
-    // Constructors
-    public Course() {}
+        @ManyToOne
+        @JoinColumn(name = "instructor_id") // Định nghĩa cột khóa ngoại
+        private Instructor instructor;
 
-    // Getters and Setters
-    public Long getId() { return id; }
-    public void setId(Long id) { this.id = id; }
+        // Sẽ thêm danh sách đăng ký ở Bước 3
+        @OneToMany(mappedBy = "course", cascade = CascadeType.ALL)
+        private List<StudentEnrollment> enrollments;
 
-    public String getTitle() { return title; }
-    public void setTitle(String title) { this.title = title; }
+        // Nhớ tạo Getter/Setter cho instructor và enrollments
+        public Instructor getInstructor() { return instructor; }
+        public void setInstructor(Instructor instructor) { this.instructor = instructor; }
 
-    public CourseStatus getStatus() { return status; }
-    public void setStatus(CourseStatus status) { this.status = status; }
+        public List<StudentEnrollment> getEnrollments() { return enrollments; }
+        public void setEnrollments(List<StudentEnrollment> enrollments) { this.enrollments = enrollments; }
+        // Constructors
+        public Course() {}
 
-    public Long getInstructorId() { return instructorId; }
-    public void setInstructorId(Long instructorId) { this.instructorId = instructorId; }
-}
+        // Getters and Setters
+        public Long getId() { return id; }
+        public void setId(Long id) { this.id = id; }
+
+        public String getTitle() { return title; }
+        public void setTitle(String title) { this.title = title; }
+
+        public CourseStatus getStatus() { return status; }
+        public void setStatus(CourseStatus status) { this.status = status; }
+
+    }

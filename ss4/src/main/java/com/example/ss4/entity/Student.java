@@ -1,30 +1,28 @@
 package com.example.ss4.entity;
 
 import jakarta.persistence.*;
-
 import java.util.List;
 
 @Entity
-@Table(name = "instructors")
-public class Instructor {
-    @OneToMany(mappedBy = "instructor", cascade = CascadeType.ALL)
-    private List<Course> courses;
+@Table(name = "students")
+public class Student {
 
-    // Nhớ tạo Getter/Setter
-    public List<Course> getCourses() { return courses; }
-    public void setCourses(List<Course> courses) { this.courses = courses; }
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(length = 100, nullable = false) // Giới hạn 100 ký tự, không được để trống
+    @Column(nullable = false)
     private String name;
 
-    @Column(nullable = false) // Không được để trống
+    @Column(nullable = false, unique = true)
     private String email;
 
+    // Sẽ thêm danh sách đăng ký ở Bước 3
+    @OneToMany(mappedBy = "student", cascade = CascadeType.ALL)
+    private List<StudentEnrollment> enrollments;
+
     // Constructors
-    public Instructor() {}
+    public Student() {}
 
     // Getters and Setters
     public Long getId() { return id; }
@@ -35,4 +33,7 @@ public class Instructor {
 
     public String getEmail() { return email; }
     public void setEmail(String email) { this.email = email; }
+
+    public List<StudentEnrollment> getEnrollments() { return enrollments; }
+    public void setEnrollments(List<StudentEnrollment> enrollments) { this.enrollments = enrollments; }
 }
